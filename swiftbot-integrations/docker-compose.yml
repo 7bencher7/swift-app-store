@@ -1,0 +1,169 @@
+services:
+  swift-setup:
+    image: swift-setup:0.1.0
+    container_name: ${APP_ID}_setup_1
+    restart: unless-stopped
+    environment:
+      PORT: 3010
+      CONFIG_PATH: /data/swift-config.json
+      SETUP_ADMIN_USER: swiftadmin
+      SETUP_ADMIN_PASSWORD: "1770ccb8060622ec3f569ca1ce2d4df1c22e32788f1f7a01"
+    ports:
+      - "3010:3010"
+    volumes:
+      - ${APP_DATA_DIR}/data/setup:/data
+
+  chatwoot-postgres:
+    image: pgvector/pgvector:pg15
+    container_name: ${APP_ID}_chatwoot_postgres_1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: chatwoot
+      POSTGRES_USER: chatwoot
+      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+    volumes:
+      - ${APP_DATA_DIR}/data/chatwoot-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatwoot -d chatwoot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  chatwoot-redis:
+    image: redis:7-alpine
+    container_name: ${APP_ID}_chatwoot_redis_1
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ${APP_DATA_DIR}/data/chatwoot-redis:/data
+
+  chatwoot-init:
+    image: chatwoot/chatwoot:latest
+    container_name: ${APP_ID}_chatwoot_init_1
+    restart: "no"
+    depends_on:
+      chatwoot-postgres:
+        condition: service_healthy
+      chatwoot-redis:
+        condition: service_started
+    environment:
+      POSTGRES_DATABASE: chatwoot
+      POSTGRES_USERNAME: chatwoot
+      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+      POSTGRES_HOST: chatwoot-postgres
+      REDIS_URL: redis://chatwoot-redis:6379
+      SECRET_KEY_BASE: "beed1d4d917a5c4615682579e0da3b392d16eb2ce03f5ea0b0eb63b8b0ea69caf0904dee4864064d26ee5cbb58ac34d76fec099bde48acb0d0b06a1e5be7561b"
+      FRONTEND_URL: "http://umbrel.local:3001"
+      INSTALLATION_NAME: Swift
+      RAILS_ENV: production
+      ACTIVE_STORAGE_SERVICE: local
+      RAILS_LOG_TO_STDOUT: "true"
+      ENABLE_ACCOUNT_SIGNUP: "false"
+    command: ["bundle", "exec", "rails", "db:chatwoot_prepare"]
+
+  chatwoot:
+    image: chatwoot/chatwoot:latest
+    container_name: ${APP_ID}_chatwoot_1
+    restart: unless-stopped
+    depends_on:
+      chatwoot-init:
+        condition: service_completed_successfully
+    environment:
+      POSTGRES_DATABASE: chatwoot
+      POSTGRES_USERNAME: chatwoot
+      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+      POSTGRES_HOST: chatwoot-postgres
+      REDIS_URL: redis://chatwoot-redis:6379
+      SECRET_KEY_BASE: "beed1d4d917a5c4615682579e0da3b392d16eb2ce03f5ea0b0eb63b8b0ea69caf0904dee4864064d26ee5cbb58ac34d76fec099bde48acb0d0b06a1e5be7561b"
+      FRONTEND_URL: "http://umbrel.local:3001"
+      INSTALLATION_NAME: Swift
+      RAILS_ENV: production
+      ACTIVE_STORAGE_SERVICE: local
+      RAILS_LOG_TO_STDOUT: "true"
+      ENABLE_ACCOUNT_SIGNUP: "false"
+    ports:
+      - "3001:3000"
+    command: ["bundle", "exec", "rails", "s", "-p", "3000", "-b", "0.0.0.0"]
+
+  chatwoot-worker:
+    image: chatwoot/chatwoot:latest
+    container_name: ${APP_ID}_chatwoot_worker_1
+    restart: unless-stopped
+    depends_on:
+      chatwoot-init:
+        condition: service_completed_successfully
+    environment:
+      POSTGRES_DATABASE: chatwoot
+      POSTGRES_USERNAME: chatwoot
+      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+      POSTGRES_HOST: chatwoot-postgres
+      REDIS_URL: redis://chatwoot-redis:6379
+      SECRET_KEY_BASE: "beed1d4d917a5c4615682579e0da3b392d16eb2ce03f5ea0b0eb63b8b0ea69caf0904dee4864064d26ee5cbb58ac34d76fec099bde48acb0d0b06a1e5be7561b"
+      FRONTEND_URL: "http://umbrel.local:3001"
+      INSTALLATION_NAME: Swift
+      RAILS_ENV: production
+      ACTIVE_STORAGE_SERVICE: local
+      RAILS_LOG_TO_STDOUT: "true"
+      ENABLE_ACCOUNT_SIGNUP: "false"
+    command: ["bundle", "exec", "sidekiq", "-C", "config/sidekiq.yml"]
+
+  evolution-postgres:
+    image: postgres:15-alpine
+    container_name: ${APP_ID}_evolution_postgres_1
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: evolution
+      POSTGRES_USER: evolution
+      POSTGRES_PASSWORD: "26190c11325c8ff843272dc02f31ce3d5481aaad78745468b0f3af80d22e796c"
+    volumes:
+      - ${APP_DATA_DIR}/data/evolution-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U evolution -d evolution"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  evolution-redis:
+    image: redis:7-alpine
+    container_name: ${APP_ID}_evolution_redis_1
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - ${APP_DATA_DIR}/data/evolution-redis:/data
+
+  evolution-api:
+    image: evoapicloud/evolution-api:latest
+    container_name: ${APP_ID}_evolution_api_1
+    restart: unless-stopped
+    depends_on:
+      evolution-postgres:
+        condition: service_healthy
+      evolution-redis:
+        condition: service_started
+    environment:
+      SERVER_PORT: 8080
+      SERVER_URL: "http://umbrel.local:8083"
+      AUTHENTICATION_API_KEY: "e0e339c40e6456430c6f27edce47c87a6eddbe992f5eb728435c10ab63d82dbe"
+      LANGUAGE: en
+      TZ: Africa/Nairobi
+      LOG_LEVEL: ERROR
+      DATABASE_SAVE_DATA_INSTANCE: "true"
+      DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
+      DATABASE_SAVE_MESSAGE_UPDATE: "true"
+      DATABASE_SAVE_DATA_CONTACTS: "true"
+      DATABASE_SAVE_DATA_CHATS: "true"
+      DATABASE_SAVE_DATA_LABELS: "true"
+      DATABASE_SAVE_DATA_HISTORIC: "true"
+      DATABASE_SAVE_IS_ON_WHATSAPP: "true"
+      CHATWOOT_ENABLED: "true"
+      CHATWOOT_MESSAGE_READ: "true"
+      CHATWOOT_MESSAGE_DELETE: "true"
+      CHATWOOT_BOT_CONTACT: "true"
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: "postgresql://evolution:26190c11325c8ff843272dc02f31ce3d5481aaad78745468b0f3af80d22e796c@evolution-postgres:5432/evolution"
+      DATABASE_CONNECTION_CLIENT_NAME: evolution_exchange
+      CACHE_REDIS_URI: redis://evolution-redis:6379
+      CACHE_REDIS_PREFIX_KEY: evolution
+      CACHE_LOCAL_ENABLED: "false"
+    ports:
+      - "8083:8080"
