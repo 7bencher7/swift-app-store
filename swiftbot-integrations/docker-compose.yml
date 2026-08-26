@@ -7,7 +7,7 @@ services:
       PORT: 3010
       CONFIG_PATH: /data/swift-config.json
       SETUP_ADMIN_USER: swiftadmin
-      SETUP_ADMIN_PASSWORD: "1770ccb8060622ec3f569ca1ce2d4df1c22e32788f1f7a01"
+      SETUP_ADMIN_PASSWORD: "21ee94bfc6d4e249329482a4ee745b60af8236538a931ab7"
     ports:
       - "3010:3010"
     volumes:
@@ -20,7 +20,7 @@ services:
     environment:
       POSTGRES_DB: chatwoot
       POSTGRES_USER: chatwoot
-      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+      POSTGRES_PASSWORD: "d63cfe9d1a2f99a48e88597ffd090be050dd9d18c68f00d3655be33999a36fe5"
     volumes:
       - ${APP_DATA_DIR}/data/chatwoot-postgres:/var/lib/postgresql/data
     healthcheck:
@@ -49,10 +49,10 @@ services:
     environment:
       POSTGRES_DATABASE: chatwoot
       POSTGRES_USERNAME: chatwoot
-      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+      POSTGRES_PASSWORD: "d63cfe9d1a2f99a48e88597ffd090be050dd9d18c68f00d3655be33999a36fe5"
       POSTGRES_HOST: chatwoot-postgres
       REDIS_URL: redis://chatwoot-redis:6379
-      SECRET_KEY_BASE: "beed1d4d917a5c4615682579e0da3b392d16eb2ce03f5ea0b0eb63b8b0ea69caf0904dee4864064d26ee5cbb58ac34d76fec099bde48acb0d0b06a1e5be7561b"
+      SECRET_KEY_BASE: "93d4e5e7296f3a4ce0ac80bcc939679bcff1a2b1f6cfb01428a077dc270855fc64f981682cb36228ad0c2ec9a0d949919b3074ada534492d65cf431b2841d14e"
       FRONTEND_URL: "http://umbrel.local:3001"
       INSTALLATION_NAME: Swift
       RAILS_ENV: production
@@ -71,10 +71,10 @@ services:
     environment:
       POSTGRES_DATABASE: chatwoot
       POSTGRES_USERNAME: chatwoot
-      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+      POSTGRES_PASSWORD: "d63cfe9d1a2f99a48e88597ffd090be050dd9d18c68f00d3655be33999a36fe5"
       POSTGRES_HOST: chatwoot-postgres
       REDIS_URL: redis://chatwoot-redis:6379
-      SECRET_KEY_BASE: "beed1d4d917a5c4615682579e0da3b392d16eb2ce03f5ea0b0eb63b8b0ea69caf0904dee4864064d26ee5cbb58ac34d76fec099bde48acb0d0b06a1e5be7561b"
+      SECRET_KEY_BASE: "93d4e5e7296f3a4ce0ac80bcc939679bcff1a2b1f6cfb01428a077dc270855fc64f981682cb36228ad0c2ec9a0d949919b3074ada534492d65cf431b2841d14e"
       FRONTEND_URL: "http://umbrel.local:3001"
       INSTALLATION_NAME: Swift
       RAILS_ENV: production
@@ -95,10 +95,10 @@ services:
     environment:
       POSTGRES_DATABASE: chatwoot
       POSTGRES_USERNAME: chatwoot
-      POSTGRES_PASSWORD: "ebf62082c93e9357c7a1dd2796d3d7040b7759f588a6e28edab28cbf7cdfb962"
+      POSTGRES_PASSWORD: "d63cfe9d1a2f99a48e88597ffd090be050dd9d18c68f00d3655be33999a36fe5"
       POSTGRES_HOST: chatwoot-postgres
       REDIS_URL: redis://chatwoot-redis:6379
-      SECRET_KEY_BASE: "beed1d4d917a5c4615682579e0da3b392d16eb2ce03f5ea0b0eb63b8b0ea69caf0904dee4864064d26ee5cbb58ac34d76fec099bde48acb0d0b06a1e5be7561b"
+      SECRET_KEY_BASE: "93d4e5e7296f3a4ce0ac80bcc939679bcff1a2b1f6cfb01428a077dc270855fc64f981682cb36228ad0c2ec9a0d949919b3074ada534492d65cf431b2841d14e"
       FRONTEND_URL: "http://umbrel.local:3001"
       INSTALLATION_NAME: Swift
       RAILS_ENV: production
@@ -114,7 +114,7 @@ services:
     environment:
       POSTGRES_DB: evolution
       POSTGRES_USER: evolution
-      POSTGRES_PASSWORD: "26190c11325c8ff843272dc02f31ce3d5481aaad78745468b0f3af80d22e796c"
+      POSTGRES_PASSWORD: "f25a61198084ad8b6e3fd36f825eb8533cf4c3a8de75c513e835372351ca007e"
     volumes:
       - ${APP_DATA_DIR}/data/evolution-postgres:/var/lib/postgresql/data
     healthcheck:
@@ -143,7 +143,7 @@ services:
     environment:
       SERVER_PORT: 8080
       SERVER_URL: "http://umbrel.local:8083"
-      AUTHENTICATION_API_KEY: "e0e339c40e6456430c6f27edce47c87a6eddbe992f5eb728435c10ab63d82dbe"
+      AUTHENTICATION_API_KEY: "0b700aa71da86c53809940a707ed76714d3f3569bb402fe6b66a1b56b974e98e"
       LANGUAGE: en
       TZ: Africa/Nairobi
       LOG_LEVEL: ERROR
@@ -160,7 +160,7 @@ services:
       CHATWOOT_MESSAGE_DELETE: "true"
       CHATWOOT_BOT_CONTACT: "true"
       DATABASE_PROVIDER: postgresql
-      DATABASE_CONNECTION_URI: "postgresql://evolution:26190c11325c8ff843272dc02f31ce3d5481aaad78745468b0f3af80d22e796c@evolution-postgres:5432/evolution"
+      DATABASE_CONNECTION_URI: "postgresql://evolution:f25a61198084ad8b6e3fd36f825eb8533cf4c3a8de75c513e835372351ca007e@evolution-postgres:5432/evolution"
       DATABASE_CONNECTION_CLIENT_NAME: evolution_exchange
       CACHE_REDIS_URI: redis://evolution-redis:6379
       CACHE_REDIS_PREFIX_KEY: evolution
