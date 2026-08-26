@@ -1,6 +1,7 @@
 services:
   swift-setup:
     image: swift-setup:0.1.0
+    pull_policy: never
     container_name: ${APP_ID}_setup_1
     restart: unless-stopped
     environment:
