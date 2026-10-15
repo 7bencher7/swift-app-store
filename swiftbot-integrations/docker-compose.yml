@@ -167,3 +167,5 @@ services:
       CACHE_LOCAL_ENABLED: "false"
     ports:
       - "8083:8080"
+  wallet-service:
+      
