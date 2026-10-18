@@ -167,7 +167,8 @@ services:
       CACHE_LOCAL_ENABLED: "false"
     ports:
       - "8083:8080"
-    wallet-service:
+
+  wallet-service:
     image: snooflanes/pollieswift-wallet:0.1.0
     container_name: ${APP_ID}_wallet_1
     restart: unless-stopped
@@ -180,5 +181,3 @@ services:
       PORT: 4001
     ports:
       - "4001:4001"
-
-      
