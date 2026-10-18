@@ -4,7 +4,7 @@ name: Swift Integrations
 tagline: WhatsApp escrow bot backend (Evolution API + Chatwoot)
 icon: https://cdn-icons-png.flaticon.com/512/220/220236.png
 category: Development
-version: "1.0.0"
+version: "1.0.1"
 port: 3010
 description: >-
   Runs the Evolution API WhatsApp bridge and Chatwoot backend that power
@@ -20,7 +20,8 @@ repo: ""
 support: ""
 gallery: []
 releaseNotes: >-
-  Initial release.
+  Adds the wallet service (port 4001) that generates escrow deposit
+  addresses for the PollieSwift workflow.
 dependencies: []
 path: ""
 defaultUsername: ""
